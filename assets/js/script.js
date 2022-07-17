@@ -26,6 +26,12 @@ var saveHistory = function () {
   localStorage.setItem("city-history", JSON.stringify(historyArr));
 };
 
+// clear history and save
+var clearHistory = function () {
+    historyArr = [];
+    saveHistory();
+  };
+
 // initialize page using cityData input, otherwise load using last value in search or default
 var loadMain = function (cityData, cityName, stateCode) {
   // clear overview & forecast
@@ -73,7 +79,6 @@ var loadMain = function (cityData, cityName, stateCode) {
   //   var forecasts = document.getElementById("forecasts");
   var forecastH3 = document.createElement("h3");
   forecastH3.textContent = "5 Day Forecast:";
-  console.log(forecasts);
   forecasts.append(forecastH3);
   var forecast5EL = document.createElement("div");
   forecast5EL.id = "forecast5";
@@ -146,6 +151,8 @@ var getLatLon = function (cityName, stateCode) {
 };
 
 // create history button for a city
+// TODO: don't add button unless results are returned
+// TODO: Add clear history button
 var createHistoryButton = function (cityName, stateCode) {
   var cityLi = document.createElement("li");
   var cityBtn = document.createElement("button");
