@@ -13,23 +13,19 @@ var loadHistory = function () {
   }
   // loop over array to populate schedule between 9 am and 5 pm
   for (var i = 0; i < history.length; i++) {
-      createHistoryBtn(i, history[i]);
+      createHistoryButton(i, history[i]);
   }
 };
 
 // save search history to local storage
 var saveHistory = function () {
-      // save events to local storage location
+      // save history to local storage location
   localStorage.setItem("city-history", JSON.stringify(history));
 };
 
-// load button to seach history
-var createHistoryBtn = function(cityName){
-
-};
 
 // initialize page using cityData input, otherwise load using last value in search
-var initializePage = function (cityData) {
+var initializeMain = function (cityData) {
     console.log(cityData);
 };
 
@@ -39,7 +35,7 @@ var getForecast = function (lat,lon) {
   fetch(apiUrl).then(function (response) {
     if (response.ok) {
       response.json().then(function (data) {
-        initializePage(data);
+        initializeMain(data);
       });
     } else {
       alert('Error: ' + response.statusText);
@@ -68,15 +64,24 @@ var getLatLon = function (cityName, stateCode) {
 };
 
 // create history button for a city
-var createHistoryButton = function (cityName) {};
+var createHistoryButton = function (cityName) {
+    // console.log(cityName);
+};
 
 // get API data for a city, load API Data to page, add search to history
-var submitBtnHandler = function (event) {};
+var submitBtnHandler = function (event) {
+    event.preventDefault();
+    var inputEl = document.getElementById("city");
+    var inputString = inputEl.value;
+    var cityName = inputString.split(",")[0].trim();
+    var stateCode = inputString.split(",")[1].trim();
+    createHistoryButton(cityName,stateCode);
+    getLatLon(cityName,stateCode);
+};
 
 // event listener for submit search button
 citySearch.addEventListener("submit", submitBtnHandler);
 
 // load history from local storage and initialize page
 // loadHistory();
-// initializePage();
-getLatLon("Yonkers","NY");
+// initializeMain();
