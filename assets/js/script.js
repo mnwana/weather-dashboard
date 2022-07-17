@@ -3,6 +3,7 @@ var apiKey = "a8f5376058c57b89eb2148315aa2f653";
 var citySearch = document.getElementById("city-search");
 var main = document.getElementById("city-results");
 var overviewEl = document.getElementById("overview");
+var historyList = document.getElementById("search-history-list");
 
 // load search history from local storage
 var loadHistory = function () {
@@ -14,7 +15,7 @@ var loadHistory = function () {
   }
   // loop over array to populate schedule between 9 am and 5 pm
   for (var i = 0; i < historyArr.length; i++) {
-    createHistoryButton(i, historyArr[i]);
+    createHistoryButton(historyArr[i][0],historyArr[i][1]);
   }
 };
 
@@ -26,7 +27,6 @@ var saveHistory = function () {
 
 // initialize page using cityData input, otherwise load using last value in search or default
 var loadMain = function (cityData, cityName, stateCode) {
-  console.log(cityData);
   currentStats = cityData.current;
   // update overview
   var overviewHeader = document.createElement("div");
@@ -130,8 +130,15 @@ var getLatLon = function (cityName, stateCode) {
 };
 
 // create history button for a city
-var createHistoryButton = function (cityName) {
-  // console.log(cityName);
+var createHistoryButton = function (cityName,stateCode) {
+    var cityLi = document.createElement("li");
+    var cityBtn = document.createElement("button");
+    cityBtn.setAttribute("data-city-name",cityName);
+    cityBtn.setAttribute("data-state-code",stateCode);
+    cityBtn.textContent = cityName+", "+ stateCode;
+    cityBtn.className="btn";
+    cityLi.append(cityBtn);
+    historyList.append(cityLi);
 };
 
 // get API data for a city, load API Data to page, add search to history
@@ -147,8 +154,16 @@ var submitBtnHandler = function (event) {
   getLatLon(cityName, stateCode);
 };
 
+var historyBtnHandler = function(event){
+    event.preventDefault();
+    var cityName =  event.target.getAttribute("data-city-name");
+    var stateCode = event.target.getAttribute("data-state-code");
+    getLatLon(cityName, stateCode);
+};
+
 // event listener for submit search button
 citySearch.addEventListener("submit", submitBtnHandler);
+historyList.addEventListener("click",historyBtnHandler);
 
 // load history from local storage and initialize page
 loadHistory();
