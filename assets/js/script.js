@@ -4,6 +4,7 @@ var citySearch = document.getElementById("city-search");
 var main = document.getElementById("city-results");
 var overviewEl = document.getElementById("overview");
 var historyList = document.getElementById("search-history-list");
+var forecasts = document.getElementById("forecasts");
 
 // load search history from local storage
 var loadHistory = function () {
@@ -15,7 +16,7 @@ var loadHistory = function () {
   }
   // loop over array to populate schedule between 9 am and 5 pm
   for (var i = 0; i < historyArr.length; i++) {
-    createHistoryButton(historyArr[i][0],historyArr[i][1]);
+    createHistoryButton(historyArr[i][0], historyArr[i][1]);
   }
 };
 
@@ -27,12 +28,20 @@ var saveHistory = function () {
 
 // initialize page using cityData input, otherwise load using last value in search or default
 var loadMain = function (cityData, cityName, stateCode) {
+  // clear overview & forecast
+  removeAllChildren(overviewEl);
+  removeAllChildren(forecasts);
+
   currentStats = cityData.current;
   // update overview
   var overviewHeader = document.createElement("div");
   var mainH2 = document.createElement("h2");
   mainH2.textContent =
-    cityName + " " + stateCode + " " + moment.unix(currentStats.dt).format("MM/DD/YYYY");
+    cityName +
+    " " +
+    stateCode +
+    " " +
+    moment.unix(currentStats.dt).format("MM/DD/YYYY");
   var mainSpan = document.createElement("span");
   mainSpan.className = "oi oi-cloud";
   overviewHeader.append(mainH2);
@@ -60,16 +69,22 @@ var loadMain = function (cityData, cityName, stateCode) {
   overviewEl.append(uvDiv);
 
   // update 5 day forecast
-  var forecast =cityData.daily; 
-  var forecast5EL = document.getElementById("forecasts");
+  var forecast = cityData.daily;
+  //   var forecasts = document.getElementById("forecasts");
+  var forecastH3 = document.createElement("h3");
+  forecastH3.textContent = "5 Day Forecast:";
+  console.log(forecasts);
+  forecasts.append(forecastH3);
+  var forecast5EL = document.createElement("div");
+  forecast5EL.id = "forecast5";
   for (var i = 1; i < 6; i++) {
     daily = forecast[i];
     var card = document.createElement("article");
     var date = document.createElement("h3");
     date.textContent = moment.unix(daily.dt).format("MM/DD/YYYY");
-    
+
     var icon = document.createElement("span");
-    icon.className = 'oi oi-cloud';
+    icon.className = "oi oi-cloud";
 
     var temp = document.createElement("p");
     temp.textContent = "Temp: " + daily.temp.day;
@@ -87,6 +102,7 @@ var loadMain = function (cityData, cityName, stateCode) {
     card.append(humidity);
     forecast5EL.append(card);
   }
+  forecasts.append(forecast5EL);
 };
 
 // get weather data for a city from API
@@ -130,15 +146,15 @@ var getLatLon = function (cityName, stateCode) {
 };
 
 // create history button for a city
-var createHistoryButton = function (cityName,stateCode) {
-    var cityLi = document.createElement("li");
-    var cityBtn = document.createElement("button");
-    cityBtn.setAttribute("data-city-name",cityName);
-    cityBtn.setAttribute("data-state-code",stateCode);
-    cityBtn.textContent = cityName+", "+ stateCode;
-    cityBtn.className="btn";
-    cityLi.append(cityBtn);
-    historyList.append(cityLi);
+var createHistoryButton = function (cityName, stateCode) {
+  var cityLi = document.createElement("li");
+  var cityBtn = document.createElement("button");
+  cityBtn.setAttribute("data-city-name", cityName);
+  cityBtn.setAttribute("data-state-code", stateCode);
+  cityBtn.textContent = cityName + ", " + stateCode;
+  cityBtn.className = "btn";
+  cityLi.append(cityBtn);
+  historyList.append(cityLi);
 };
 
 // get API data for a city, load API Data to page, add search to history
@@ -154,16 +170,22 @@ var submitBtnHandler = function (event) {
   getLatLon(cityName, stateCode);
 };
 
-var historyBtnHandler = function(event){
-    event.preventDefault();
-    var cityName =  event.target.getAttribute("data-city-name");
-    var stateCode = event.target.getAttribute("data-state-code");
-    getLatLon(cityName, stateCode);
+var historyBtnHandler = function (event) {
+  event.preventDefault();
+  var cityName = event.target.getAttribute("data-city-name");
+  var stateCode = event.target.getAttribute("data-state-code");
+  getLatLon(cityName, stateCode);
+};
+
+var removeAllChildren = function (parentEl) {
+  while (parentEl.firstChild) {
+    parentEl.removeChild(parentEl.firstChild);
+  }
 };
 
 // event listener for submit search button
 citySearch.addEventListener("submit", submitBtnHandler);
-historyList.addEventListener("click",historyBtnHandler);
+historyList.addEventListener("click", historyBtnHandler);
 
 // load history from local storage and initialize page
 loadHistory();
