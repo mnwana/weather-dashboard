@@ -12,14 +12,29 @@ var saveHistory = function(){
 
 };
 
-// initialize page on load
-var initializePage = function(){
+// initialize page using cityData input, otherwise load using last value in search
+var initializePage = function(cityData){
 
 };
 
 // get weather data for a city from API
-var getApiData = function(cityName){
+var getApiData = function(cityName,stateCode){
+    var cityName="Yonkers";
+    var stateCode="NY";
+    var latLon = getLatLon(cityName,stateCode);
+};
 
+var getLatLon = function(cityName,stateCode){
+    var apiUrl = "http://api.openweathermap.org/geo/1.0/direct?q="+cityName+","+stateCode+",US&appid="+apiKey;
+    fetch(apiUrl).then(function (response) {
+      if (response.ok) {
+        response.json().then(function (data) {
+        console.log(data[0].lat+","+data[0].lon);
+        });
+      } else {
+        return false;
+      }
+    });
 };
 
 // create history button for a city
@@ -37,5 +52,6 @@ submitBtn.addEventListener("submit",submitBtnHandler);
 
 
 // load history from local storage and initialize page
-loadHistory();
-initializePage();
+// loadHistory();
+// initializePage();
+getApiData("hello");
