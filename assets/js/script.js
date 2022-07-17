@@ -1,7 +1,7 @@
 var historyArr = [];
 var apiKey = "a8f5376058c57b89eb2148315aa2f653";
 var citySearch = document.getElementById("city-search");
-var main = document.getElementById("city-results");
+var cityResults = document.getElementById("city-results");
 var overviewEl = document.getElementById("overview");
 var historyList = document.getElementById("search-history-list");
 var forecasts = document.getElementById("forecasts");
@@ -42,18 +42,20 @@ var loadMain = function (cityData, cityName, stateCode) {
   currentStats = cityData.current;
   // update overview
   var overviewHeader = document.createElement("div");
-  var mainH2 = document.createElement("h2");
-  mainH2.textContent =
+  overviewHeader.className="row";
+  var cityResultsH2 = document.createElement("h2");
+  cityResultsH2.textContent =
     cityName +
     " " +
     stateCode +
     " " +
     moment.unix(currentStats.dt).format("MM/DD/YYYY");
-  var mainSpan = document.createElement("span");
-  mainSpan.className = "oi oi-cloud";
-  overviewHeader.append(mainH2);
-  overviewHeader.append(mainSpan);
-
+  var cityResultsSpan = document.createElement("span");
+  cityResultsSpan.className = "oi oi-cloud";
+  overviewHeader.append(cityResultsH2);
+  overviewHeader.append(cityResultsSpan);
+  var overviewBody = document.createElement("div");
+  overviewBody.className = "row justify-content-around";
   var currTemp = document.createElement("p");
   currTemp.textContent = "Temp: " + currentStats.temp;
   var currWind = document.createElement("p");
@@ -69,11 +71,14 @@ var loadMain = function (cityData, cityName, stateCode) {
   uvDiv.append(uvLabel);
   uvDiv.append(uvSpan);
 
+  overviewBody.append(currTemp);
+  overviewBody.append(currWind);
+  overviewBody.append(currHumidity);
+  overviewBody.append(uvDiv);
+
   overviewEl.append(overviewHeader);
-  overviewEl.append(currTemp);
-  overviewEl.append(currWind);
-  overviewEl.append(currHumidity);
-  overviewEl.append(uvDiv);
+  overviewEl.append(overviewBody);
+
 
   // update 5 day forecast
   var forecast = cityData.daily;
@@ -83,9 +88,11 @@ var loadMain = function (cityData, cityName, stateCode) {
   forecasts.append(forecastH3);
   var forecast5EL = document.createElement("div");
   forecast5EL.id = "forecast5";
+  forecast5EL.className = "row";
   for (var i = 1; i < 6; i++) {
     daily = forecast[i];
     var card = document.createElement("article");
+    card.className = "col-2";
     var date = document.createElement("h3");
     date.textContent = moment.unix(daily.dt).format("MM/DD/YYYY");
 
