@@ -1,12 +1,57 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Weather Dashboard</title>
+  </head>
+  <body>
+    <header>
+      <h2>Weather Dashboard</h2>
+    </header>
+    <div id="city-search">
+      <h2>Search for a City:</h2>
+      <form id="city-form">
+        <label class="form-label" for="city">New York City</label>
+        <input
+          name="city"
+          id="city"
+          type="text"
+          autofocus="true"
+          class="form-input"
+        />
+        <button type="submit" class="btn">Search</button>
+      </form>
+      <ol id="search-history-list">
+        <li class="search-history-item">
+          <button type="submit" class="btn">Austin</button>
+        </li>
+      </ol>
+    </div>
+    <main>
+      <div id="overview">
+        <div>
+          <h2 id="location-date"></h2>
+          <span data-id="forecast-img"></span>
+        </div>
+        <p data-id="temp">Temp:</p>
+        <p data-id="wind">Wind:</p>
+        <p data-id="humidity">Humidity:</p>
+        <div data-id="uv">
+          <p>UV Index:</p>
+        </div>
+      </div>
+      <div id="forecasts">
+        <h3>5-Day Forecast:</h3>
+        <article class="card forcast-card">
+          <h4 class="forecast-date"></h4>
+          <span data-id="forecast-img"></span>
+          <p data-id="temp">Temp:</p>
+          <p data-id="wind">Wind:</p>
+          <p data-id="humidity">Humidity:</p>
+        </article>
+      </div>
+    </main>
+  </body>
 </html>
