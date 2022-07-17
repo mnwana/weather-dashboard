@@ -14,9 +14,10 @@ var loadHistory = function () {
   if (!historyArr) {
     historyArr = [];
   }
-  // loop over array to populate schedule between 9 am and 5 pm
-  for (var i = 0; i < historyArr.length; i++) {
-    createHistoryButton(historyArr[i][0], historyArr[i][1]);
+  else {
+    for (var i = historyArr.length-1; i >=0; i--) {
+        createHistoryButton(historyArr[i][0], historyArr[i][1]);
+      }
   }
 };
 
@@ -194,6 +195,12 @@ var removeAllChildren = function (parentEl) {
 citySearch.addEventListener("submit", submitBtnHandler);
 historyList.addEventListener("click", historyBtnHandler);
 
-// load history from local storage and initialize page
+// load history from local storage and initialize page using historical result or default
 loadHistory();
-// loadMain();
+if(historyArr.length<1){
+    getLatLon("New York","NY");
+}
+else {
+    var lastEl = historyArr.length-1;
+    getLatLon(historyArr[lastEl][0],historyArr[lastEl][1]);
+}
