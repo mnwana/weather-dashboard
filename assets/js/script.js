@@ -1,12 +1,32 @@
 var history = [];
 var apiKey = "a8f5376058c57b89eb2148315aa2f653";
-var submitBtn = document.getElementById("submit-btn");
+var citySearch = document.getElementById("city-search");
+var main = document.getElementById("city-results");
 
 // load search history from local storage
-var loadHistory = function () {};
+var loadHistory = function () {
+      // load search history from local storage
+  history = JSON.parse(localStorage.getItem("city-history"));
+  // if nothing in localStorage, create a new object to load city history
+  if (!history) {
+    history = [];
+  }
+  // loop over array to populate schedule between 9 am and 5 pm
+  for (var i = 0; i < history.length; i++) {
+      createHistoryBtn(i, history[i]);
+  }
+};
 
 // save search history to local storage
-var saveHistory = function () {};
+var saveHistory = function () {
+      // save events to local storage location
+  localStorage.setItem("city-history", JSON.stringify(history));
+};
+
+// load button to seach history
+var createHistoryBtn = function(cityName){
+
+};
 
 // initialize page using cityData input, otherwise load using last value in search
 var initializePage = function (cityData) {
@@ -54,7 +74,7 @@ var createHistoryButton = function (cityName) {};
 var submitBtnHandler = function (event) {};
 
 // event listener for submit search button
-submitBtn.addEventListener("submit", submitBtnHandler);
+citySearch.addEventListener("submit", submitBtnHandler);
 
 // load history from local storage and initialize page
 // loadHistory();
