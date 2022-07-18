@@ -52,12 +52,17 @@ var loadMain = function (cityData, cityName, stateCode) {
     stateCode +
     "   (" +
     moment.unix(currentStats.dt).format("M/D/YY") + ")";
-  var cityResultsSpan = document.createElement("span");
-  cityResultsSpan.className = "oi oi-cloud";
+    cityResultsH2.className = "col-9 text-center"
+  var cityResultsImg = document.createElement("img");
+  cityResultsImg.className="col-2"
+  var weatherIcon = "http://openweathermap.org/img/wn/"+currentStats.weather[0].icon+"@2x.png";
+  var weatherAlt = currentStats.weather[0].description;
+  cityResultsImg.setAttribute("src",weatherIcon);
+  cityResultsImg.setAttribute("alt",weatherAlt);
   overviewHeader.append(cityResultsH2);
-  overviewHeader.append(cityResultsSpan);
+  overviewHeader.append(cityResultsImg);
   var overviewBody = document.createElement("div");
-  overviewBody.className = "row justify-content-around";
+  overviewBody.className = "col-6 row align-self-center justify-content-around";
   var currTemp = document.createElement("p");
   currTemp.textContent = "Temp: " + Math.round(currentStats.temp, 0) + " F";
   var currWind = document.createElement("p");
@@ -94,24 +99,29 @@ var loadMain = function (cityData, cityName, stateCode) {
   //   var forecasts = document.getElementById("forecasts");
   var forecastH3 = document.createElement("h3");
   forecastH3.textContent = "5 Day Forecast";
-  forecastH3.className = "text-center";
+  forecastH3.className = "text-center mb-4";
   forecasts.append(forecastH3);
   var forecast5EL = document.createElement("div");
   forecast5EL.id = "forecast5";
   forecast5EL.className = "row justify-content-between";
   for (var i = 1; i < 6; i++) {
     daily = forecast[i];
+    console.log(daily);
     var card = document.createElement("article");
-    card.className = "col-2 card p-0";
+    card.className = "col-2 card p-0 bg-dark h-75";
     var date = document.createElement("h3");
-    date.className = "p-0 text-center bg-secondary text-white rounded";
+    date.className = "p-0 text-center bg-secondary text-white";
     date.textContent = moment.unix(daily.dt).format("ddd M/D/YY");
 
     var cardBody = document.createElement("div");
-    cardBody.className = "p-2 bg-light";
+    cardBody.className = "pl-2 bg-dark text-light";
 
-    var icon = document.createElement("span");
-    icon.className = "oi oi-cloud";
+    var dailyResultsImg = document.createElement("img");
+    var dailyWeatherIcon = "http://openweathermap.org/img/wn/"+daily.weather[0].icon+"@2x.png";
+    console.log(dailyWeatherIcon);
+    var dailyWeatherAlt = daily.weather[0].description;
+    dailyResultsImg.setAttribute("src",dailyWeatherIcon);
+    dailyResultsImg.setAttribute("alt",dailyWeatherAlt);
 
     var temp = document.createElement("p");
     temp.textContent = "Temp: " + Math.round(daily.temp.day, 0) + " F";
@@ -122,7 +132,7 @@ var loadMain = function (cityData, cityName, stateCode) {
     var humidity = document.createElement("p");
     humidity.textContent = "Humidity: " + daily.humidity + "%";
 
-    cardBody.append(icon);
+    cardBody.append(dailyResultsImg);
     cardBody.append(temp);
     cardBody.append(wind);
     cardBody.append(humidity);
@@ -179,12 +189,12 @@ var getLatLon = function (cityName, stateCode) {
 // TODO: Add clear history button
 var createHistoryButton = function (cityName, stateCode) {
   var cityLi = document.createElement("li");
-  cityLi.className = "col-10 list-group-item mt-2 mb-2 rounded   bg-info";
+  cityLi.className = "col-10 list-group-item mt-2 mb-2 rounded  prev-city  bg-info";
   var cityBtn = document.createElement("button");
   cityBtn.setAttribute("data-city-name", cityName);
   cityBtn.setAttribute("data-state-code", stateCode);
   cityBtn.textContent = cityName + ", " + stateCode;
-  cityBtn.className = "btn btn-block p-0";
+  cityBtn.className = "btn btn-block p-0  text-white";
   cityLi.append(cityBtn);
   historyList.append(cityLi);
 };

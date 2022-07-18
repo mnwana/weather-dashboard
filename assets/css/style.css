@@ -1,0 +1,13 @@
+header {
+    background-color: #3378e6;
+    background-image: linear-gradient(45deg, #3378e6 0%, #0b48a9 52%, #101450 90%);
+}
+#submit-btn {
+    background-color: #6190dd;
+    background-image: linear-gradient(45deg, #6190dd 0%, #0b48a9 52%, rgb(19, 29, 162) 90%);
+}
+
+.prev-city {
+    background-color: #5c7192;
+    background-image: linear-gradient(45deg, #5c7192 0%, #506b97 52%, rgb(72, 103, 152) 90%);
+}
