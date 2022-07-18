@@ -63,7 +63,7 @@ var loadMain = function (cityData, cityName, stateCode) {
   var cityResultsImg = document.createElement("img");
   cityResultsImg.className = "w-auto";
   var weatherIcon =
-    "http://openweathermap.org/img/wn/" +
+    "https://openweathermap.org/img/wn/" +
     currentStats.weather[0].icon +
     "@2x.png";
   cityResultsImg.setAttribute("src", weatherIcon);
@@ -148,7 +148,7 @@ var loadMain = function (cityData, cityName, stateCode) {
 // create card image and create link for image source 
     var dailyResultsImg = document.createElement("img");
     var dailyWeatherIcon =
-      "http://openweathermap.org/img/wn/" + daily.weather[0].icon + "@2x.png";
+      "https://openweathermap.org/img/wn/" + daily.weather[0].icon + "@2x.png";
     //   get image alt from description & set attributes
     var dailyWeatherAlt = daily.weather[0].description;
     dailyResultsImg.setAttribute("src", dailyWeatherIcon);
@@ -204,7 +204,7 @@ var getForecast = function (lat, lon, cityName, stateCode) {
 var getLatLon = function (cityName, stateCode) {
   // create api url from city name and state to retrieve lat lon
   var apiUrl =
-    "http://api.openweathermap.org/geo/1.0/direct?q=" +
+    "https://api.openweathermap.org/geo/1.0/direct?q=" +
     cityName +
     "," +
     stateCode +
