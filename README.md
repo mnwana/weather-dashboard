@@ -8,7 +8,6 @@ A weather app to find out the forecast for a given location
 * CSS
 * Bootstrap
 * Javascript
-* JQuery
 * MomentJS
 * Open Weather API
 
