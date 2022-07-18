@@ -226,14 +226,13 @@ var getLatLon = function (cityName, stateCode) {
 
 // TODO: don't add button unless results are returned
 // TODO: Add clear history button
-// TODO: Make entire button clickable
 
 // create history button for a city
 var createHistoryButton = function (cityName, stateCode) {
   // create city list element ad add relevant classes for formatting
   var cityLi = document.createElement("li");
   cityLi.className =
-    "col-5 mx-1 col-lg-10 list-group-item mt-2 mb-2 rounded  prev-city  bg-info";
+    "col-5 mx-1 col-lg-10 list-group-item mt-2 mb-2 rounded  p-0 prev-city  bg-info";
   // create button to go inside element
   var cityBtn = document.createElement("button");
   //   add city & state attributes to button for use when loading results from history
@@ -242,7 +241,7 @@ var createHistoryButton = function (cityName, stateCode) {
   //   set text content to city & state
   cityBtn.textContent = cityName + ", " + stateCode;
   //   add relevant classes
-  cityBtn.className = "btn btn-block p-0  text-white";
+  cityBtn.className = "btn btn-block text-white";
   //   append button to list item and list item to history list
   cityLi.append(cityBtn);
   historyList.append(cityLi);
