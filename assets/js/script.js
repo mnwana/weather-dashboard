@@ -8,14 +8,18 @@ var forecasts = document.getElementById("forecasts");
 
 // load search history from local storage
 var loadHistory = function () {
+    removeAllChildren(historyList);
   // load search history from local storage
   historyArr = JSON.parse(localStorage.getItem("city-history"));
   // if nothing in localStorage, create a new object to load city history
   if (!historyArr) {
     historyArr = [];
   } else {
-    for (var i = historyArr.length - 1; i >= 0; i--) {
+    var itemCount = 1;
+    for (var i =  historyArr.length-1; i >= 0 && itemCount<=6; i--) {
+        console.log(i,itemCount);
       createHistoryButton(historyArr[i][0], historyArr[i][1]);
+      itemCount++;
     }
   }
 };
@@ -91,9 +95,9 @@ var loadMain = function (cityData, cityName, stateCode) {
   for (var i = 1; i < 6; i++) {
     daily = forecast[i];
     var card = document.createElement("article");
-    card.className = "col-2 card m-0";
+    card.className = "col-2 card m-0 p-0";
     var date = document.createElement("h3");
-    // date.className="card-title";
+    date.className="card-header p-0";
     date.textContent = moment.unix(daily.dt).format("MM/DD/YYYY");
 
     var icon = document.createElement("span");
@@ -163,6 +167,7 @@ var getLatLon = function (cityName, stateCode) {
 // TODO: Add clear history button
 var createHistoryButton = function (cityName, stateCode) {
   var cityLi = document.createElement("li");
+  cityLi.className = "col-10 list-group-item mt-2 mb-2";
   var cityBtn = document.createElement("button");
   cityBtn.setAttribute("data-city-name", cityName);
   cityBtn.setAttribute("data-state-code", stateCode);
@@ -181,7 +186,7 @@ var submitBtnHandler = function (event) {
   var stateCode = inputString.split(",")[1].trim();
   historyArr.push([cityName, stateCode]);
   saveHistory();
-  createHistoryButton(cityName, stateCode);
+  loadHistory();
   getLatLon(cityName, stateCode);
 };
 
