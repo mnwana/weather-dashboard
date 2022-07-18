@@ -11,3 +11,25 @@ header {
     background-color: #5c7192;
     background-image: linear-gradient(45deg, #5c7192 0%, #506b97 52%, rgb(72, 103, 152) 90%);
 }
+
+.forecast-date {
+    font-size: 22px;
+}
+
+/* media query for tablets and smaller */
+@media screen and (max-width: 900px) {
+    .forecast-date {
+        font-size: 18px;
+    }
+    #search-label {
+        font-size: 18px;
+    }
+  }
+
+
+/* media query for phones and smaller */
+@media screen and (max-width: 575px) {
+    .forecast-date {
+        font-size: 14px;
+    }
+  }

@@ -16,7 +16,7 @@ var loadHistory = function () {
     historyArr = [];
   } else {
     var itemCount = 1;
-    for (var i = historyArr.length - 1; i >= 0 && itemCount <= 6; i--) {
+    for (var i = historyArr.length - 1; i >= 0 && itemCount <= 4; i--) {
       createHistoryButton(historyArr[i][0], historyArr[i][1]);
       itemCount++;
     }
@@ -47,7 +47,6 @@ var loadMain = function (cityData, cityName, stateCode) {
   var overviewImg = document.createElement("div");
   // update overview
   var overviewHeader = document.createElement("div");
-//   overviewHeader.className = "row justify-content-center";
   var cityResultsH2 = document.createElement("h2");
   cityResultsH2.textContent =
     cityName +
@@ -71,13 +70,17 @@ var loadMain = function (cityData, cityName, stateCode) {
   overviewBody.className = "row align-self-center justify-content-around";
   var currTemp = document.createElement("p");
   currTemp.textContent = "Temp: " + Math.round(currentStats.temp, 0) + " F";
+  currTemp.className = "ml-2 col-sm-2";
   var currWind = document.createElement("p");
   currWind.textContent =
     "Wind: " + Math.round(currentStats.wind_speed, 0) + " MPH";
+    currWind.className = "ml-2 col-sm-2";
   var currHumidity = document.createElement("p");
   currHumidity.textContent = "Humidity: " + currentStats.humidity + "%";
+  currHumidity.className = "ml-2 col-sm-2";
 
   var uvDiv = document.createElement("div");
+  uvDiv.className = "ml-2 col-sm-2";
   var uvLabel = document.createElement("p");
   uvLabel = "UV: ";
   var uvSpan = document.createElement("span");
@@ -118,7 +121,7 @@ var loadMain = function (cityData, cityName, stateCode) {
     daily = forecast[i];
     console.log(daily);
     var card = document.createElement("article");
-    card.className = "col-2 card p-0 bg-dark h-75";
+    card.className = "col-12 col-md-2 my-2 card p-0 bg-dark h-75";
     var date = document.createElement("h3");
     date.className = "p-0 text-center bg-secondary text-white";
     date.textContent = moment.unix(daily.dt).format("ddd M/D/YY");
@@ -136,7 +139,7 @@ var loadMain = function (cityData, cityName, stateCode) {
 
     var temp = document.createElement("p");
     temp.textContent = "Temp: " + Math.round(daily.temp.day, 0) + " F";
-
+    
     var wind = document.createElement("p");
     wind.textContent = "Wind: " + Math.round(daily.wind_speed, 0) + " MPH";
 
@@ -202,7 +205,7 @@ var getLatLon = function (cityName, stateCode) {
 var createHistoryButton = function (cityName, stateCode) {
   var cityLi = document.createElement("li");
   cityLi.className =
-    "col-10 list-group-item mt-2 mb-2 rounded  prev-city  bg-info";
+    "col-5 mx-1 col-lg-10 list-group-item mt-2 mb-2 rounded  prev-city  bg-info";
   var cityBtn = document.createElement("button");
   cityBtn.setAttribute("data-city-name", cityName);
   cityBtn.setAttribute("data-state-code", stateCode);
