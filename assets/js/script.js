@@ -13,11 +13,10 @@ var loadHistory = function () {
   // if nothing in localStorage, create a new object to load city history
   if (!historyArr) {
     historyArr = [];
-  }
-  else {
-    for (var i = historyArr.length-1; i >=0; i--) {
-        createHistoryButton(historyArr[i][0], historyArr[i][1]);
-      }
+  } else {
+    for (var i = historyArr.length - 1; i >= 0; i--) {
+      createHistoryButton(historyArr[i][0], historyArr[i][1]);
+    }
   }
 };
 
@@ -29,9 +28,9 @@ var saveHistory = function () {
 
 // clear history and save
 var clearHistory = function () {
-    historyArr = [];
-    saveHistory();
-  };
+  historyArr = [];
+  saveHistory();
+};
 
 // initialize page using cityData input, otherwise load using last value in search or default
 var loadMain = function (cityData, cityName, stateCode) {
@@ -42,7 +41,7 @@ var loadMain = function (cityData, cityName, stateCode) {
   currentStats = cityData.current;
   // update overview
   var overviewHeader = document.createElement("div");
-  overviewHeader.className="row";
+  overviewHeader.className = "row justify-content-center";
   var cityResultsH2 = document.createElement("h2");
   cityResultsH2.textContent =
     cityName +
@@ -57,9 +56,9 @@ var loadMain = function (cityData, cityName, stateCode) {
   var overviewBody = document.createElement("div");
   overviewBody.className = "row justify-content-around";
   var currTemp = document.createElement("p");
-  currTemp.textContent = "Temp: " + currentStats.temp;
+  currTemp.textContent = "Temp: " + Math.round(currentStats.temp,0) + " F";
   var currWind = document.createElement("p");
-  currWind.textContent = "Wind: " + currentStats.wind_speed;
+  currWind.textContent = "Wind: " + Math.round(currentStats.wind_speed,0) + " MPH";
   var currHumidity = document.createElement("p");
   currHumidity.textContent = "Humidity: " + currentStats.humidity + "%";
 
@@ -79,34 +78,35 @@ var loadMain = function (cityData, cityName, stateCode) {
   overviewEl.append(overviewHeader);
   overviewEl.append(overviewBody);
 
-
   // update 5 day forecast
   var forecast = cityData.daily;
   //   var forecasts = document.getElementById("forecasts");
   var forecastH3 = document.createElement("h3");
-  forecastH3.textContent = "5 Day Forecast:";
+  forecastH3.textContent = "5 Day Forecast";
+  forecastH3.className = "text-center";
   forecasts.append(forecastH3);
   var forecast5EL = document.createElement("div");
   forecast5EL.id = "forecast5";
-  forecast5EL.className = "row";
+  forecast5EL.className = "row justify-content-between";
   for (var i = 1; i < 6; i++) {
     daily = forecast[i];
     var card = document.createElement("article");
-    card.className = "col-2";
+    card.className = "col-2 card m-0";
     var date = document.createElement("h3");
+    // date.className="card-title";
     date.textContent = moment.unix(daily.dt).format("MM/DD/YYYY");
 
     var icon = document.createElement("span");
     icon.className = "oi oi-cloud";
 
     var temp = document.createElement("p");
-    temp.textContent = "Temp: " + daily.temp.day;
+    temp.textContent = "Temp: " + Math.round(daily.temp.day,0) +" F";
 
     var wind = document.createElement("p");
-    wind.textContent = "Wind: " + daily.wind_speed;
+    wind.textContent = "Wind: " + Math.round(daily.wind_speed,0) + " MPH";
 
     var humidity = document.createElement("p");
-    humidity.textContent = "Humidity: " + daily.humidity;
+    humidity.textContent = "Humidity: " + daily.humidity+ "%";
 
     card.append(date);
     card.append(icon);
@@ -204,10 +204,9 @@ historyList.addEventListener("click", historyBtnHandler);
 
 // load history from local storage and initialize page using historical result or default
 loadHistory();
-if(historyArr.length<1){
-    getLatLon("New York","NY");
-}
-else {
-    var lastEl = historyArr.length-1;
-    getLatLon(historyArr[lastEl][0],historyArr[lastEl][1]);
+if (historyArr.length < 1) {
+  getLatLon("New York", "NY");
+} else {
+  var lastEl = historyArr.length - 1;
+  getLatLon(historyArr[lastEl][0], historyArr[lastEl][1]);
 }
