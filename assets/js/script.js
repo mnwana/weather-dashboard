@@ -83,11 +83,11 @@ var loadMain = function (cityData, cityName, stateCode) {
   var uvSpan = document.createElement("span");
   uvSpan.textContent = currentStats.uvi;
   if (currentStats.uvi <= 0.5) {
-    uvSpan.className = "bg-success rounded";
+    uvSpan.className = "bg-success rounded px-2";
   } else if (currentStats.uvi <= 0.75) {
-    uvSpan.className = "bg-warning rounded";
+    uvSpan.className = "bg-warning rounded px-2";
   } else {
-    uvSpan.className = "bg-danger rounded";
+    uvSpan.className = "bg-danger rounded px-2";
   }
   uvDiv.append(uvLabel);
   uvDiv.append(uvSpan);
@@ -198,6 +198,7 @@ var getLatLon = function (cityName, stateCode) {
 // create history button for a city
 // TODO: don't add button unless results are returned
 // TODO: Add clear history button
+// TODO: Make all buttons clickable
 var createHistoryButton = function (cityName, stateCode) {
   var cityLi = document.createElement("li");
   cityLi.className =
