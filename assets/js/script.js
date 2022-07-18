@@ -123,7 +123,7 @@ var loadMain = function (cityData, cityName, stateCode) {
     var card = document.createElement("article");
     card.className = "col-12 col-md-2 my-2 card p-0 bg-dark h-75";
     var date = document.createElement("h3");
-    date.className = "p-0 text-center bg-secondary text-white";
+    date.className = "p-0 text-center bg-secondary text-white forecast-date";
     date.textContent = moment.unix(daily.dt).format("ddd M/D/YY");
 
     var cardBody = document.createElement("div");
