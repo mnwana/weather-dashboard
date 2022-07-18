@@ -42,27 +42,33 @@ var loadMain = function (cityData, cityName, stateCode) {
   removeAllChildren(forecasts);
 
   currentStats = cityData.current;
+
+  var overviewMain = document.createElement("div");
+  var overviewImg = document.createElement("div");
   // update overview
   var overviewHeader = document.createElement("div");
-  overviewHeader.className = "row justify-content-center";
+//   overviewHeader.className = "row justify-content-center";
   var cityResultsH2 = document.createElement("h2");
   cityResultsH2.textContent =
     cityName +
     ", " +
     stateCode +
     "   (" +
-    moment.unix(currentStats.dt).format("M/D/YY") + ")";
-    cityResultsH2.className = "col-9 text-center"
+    moment.unix(currentStats.dt).format("M/D/YY") +
+    ")";
+  cityResultsH2.className = "text-center";
   var cityResultsImg = document.createElement("img");
-  cityResultsImg.className="col-2"
-  var weatherIcon = "http://openweathermap.org/img/wn/"+currentStats.weather[0].icon+"@2x.png";
+  cityResultsImg.className = "w-auto";
+  var weatherIcon =
+    "http://openweathermap.org/img/wn/" +
+    currentStats.weather[0].icon +
+    "@2x.png";
   var weatherAlt = currentStats.weather[0].description;
-  cityResultsImg.setAttribute("src",weatherIcon);
-  cityResultsImg.setAttribute("alt",weatherAlt);
+  cityResultsImg.setAttribute("src", weatherIcon);
+  cityResultsImg.setAttribute("alt", weatherAlt);
   overviewHeader.append(cityResultsH2);
-  overviewHeader.append(cityResultsImg);
   var overviewBody = document.createElement("div");
-  overviewBody.className = "col-6 row align-self-center justify-content-around";
+  overviewBody.className = "row align-self-center justify-content-around";
   var currTemp = document.createElement("p");
   currTemp.textContent = "Temp: " + Math.round(currentStats.temp, 0) + " F";
   var currWind = document.createElement("p");
@@ -91,9 +97,13 @@ var loadMain = function (cityData, cityName, stateCode) {
   overviewBody.append(currHumidity);
   overviewBody.append(uvDiv);
 
-  overviewEl.append(overviewHeader);
-  overviewEl.append(overviewBody);
+  overviewMain.append(overviewHeader);
+  overviewMain.append(overviewBody);
 
+  overviewImg.append(cityResultsImg);
+
+  overviewEl.append(overviewMain);
+  overviewEl.append(overviewImg);
   // update 5 day forecast
   var forecast = cityData.daily;
   //   var forecasts = document.getElementById("forecasts");
@@ -117,11 +127,12 @@ var loadMain = function (cityData, cityName, stateCode) {
     cardBody.className = "pl-2 bg-dark text-light";
 
     var dailyResultsImg = document.createElement("img");
-    var dailyWeatherIcon = "http://openweathermap.org/img/wn/"+daily.weather[0].icon+"@2x.png";
+    var dailyWeatherIcon =
+      "http://openweathermap.org/img/wn/" + daily.weather[0].icon + "@2x.png";
     console.log(dailyWeatherIcon);
     var dailyWeatherAlt = daily.weather[0].description;
-    dailyResultsImg.setAttribute("src",dailyWeatherIcon);
-    dailyResultsImg.setAttribute("alt",dailyWeatherAlt);
+    dailyResultsImg.setAttribute("src", dailyWeatherIcon);
+    dailyResultsImg.setAttribute("alt", dailyWeatherAlt);
 
     var temp = document.createElement("p");
     temp.textContent = "Temp: " + Math.round(daily.temp.day, 0) + " F";
@@ -189,7 +200,8 @@ var getLatLon = function (cityName, stateCode) {
 // TODO: Add clear history button
 var createHistoryButton = function (cityName, stateCode) {
   var cityLi = document.createElement("li");
-  cityLi.className = "col-10 list-group-item mt-2 mb-2 rounded  prev-city  bg-info";
+  cityLi.className =
+    "col-10 list-group-item mt-2 mb-2 rounded  prev-city  bg-info";
   var cityBtn = document.createElement("button");
   cityBtn.setAttribute("data-city-name", cityName);
   cityBtn.setAttribute("data-state-code", stateCode);
