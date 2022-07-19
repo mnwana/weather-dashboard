@@ -19,7 +19,7 @@ var loadHistory = function () {
   else {
     var itemCount = 1;
     for (var i = historyArr.length - 1; i >= 0 && itemCount <= 4; i--) {
-      createHistoryButton(historyArr[i][0], historyArr[i][1]);
+      createHistoryButton(historyArr[i]);
       itemCount++;
     }
   }
@@ -39,7 +39,7 @@ var clearHistory = function () {
 // TODO: break into 2 sub-functions for overview & forecast
 // TODO: remove erroneous nesting
 // initialize page using cityData input
-var loadMain = function (cityData, cityName, stateCode) {
+var loadMain = function (cityData, cityName) {
   // clear children overview & forecast elements
   removeAllChildren(overviewEl);
   removeAllChildren(forecasts);
@@ -52,9 +52,7 @@ var loadMain = function (cityData, cityName, stateCode) {
   var overviewHeader = document.createElement("div");
   var cityResultsH2 = document.createElement("h2");
   cityResultsH2.textContent =
-    cityName +
-    ", " +
-    stateCode +
+    cityName + 
     "   (" +
     moment.unix(currentStats.dt).format("M/D/YY") +
     ")";
@@ -178,7 +176,7 @@ var loadMain = function (cityData, cityName, stateCode) {
 };
 
 // get weather data for a city from API
-var getForecast = function (lat, lon, cityName, stateCode) {
+var getForecast = function (lat, lon, cityName) {
   // create api url from lat lon
   var apiUrl =
     "https://api.openweathermap.org/data/2.5/onecall?lat=" +
@@ -191,7 +189,7 @@ var getForecast = function (lat, lon, cityName, stateCode) {
     if (response.ok) {
       response.json().then(function (data) {
         // call function to load page with forecast data and city text inputs
-        loadMain(data, cityName, stateCode);
+        loadMain(data, cityName);
       });
     } else {
       // alert if there is an error
@@ -200,14 +198,12 @@ var getForecast = function (lat, lon, cityName, stateCode) {
   });
 };
 
-// get lat lon from city and state
-var getLatLon = function (cityName, stateCode) {
-  // create api url from city name and state to retrieve lat lon
+// get lat lon from city 
+var getLatLon = function (cityName) {
+  // create api url from city name to retrieve lat lon
   var apiUrl =
     "http://api.openweathermap.org/geo/1.0/direct?q=" +
-    cityName +
-    "," +
-    stateCode +
+    cityName  +
     ",US&appid=" +
     apiKey;
   // fetch api url
@@ -215,7 +211,7 @@ var getLatLon = function (cityName, stateCode) {
     if (response.ok) {
       response.json().then(function (data) {
         // upon reponse, get forecast data through passing lat, lon and city text inputs
-        getForecast(data[0].lat, data[0].lon, cityName, stateCode);
+        getForecast(data[0].lat, data[0].lon, cityName);
       });
     } else {
       // alert if there is an error
@@ -228,18 +224,17 @@ var getLatLon = function (cityName, stateCode) {
 // TODO: Add clear history button
 
 // create history button for a city
-var createHistoryButton = function (cityName, stateCode) {
+var createHistoryButton = function (cityName) {
   // create city list element ad add relevant classes for formatting
   var cityLi = document.createElement("li");
   cityLi.className =
     "col-5 mx-1 col-lg-10 list-group-item mt-2 mb-2 rounded  p-0 prev-city  bg-info";
   // create button to go inside element
   var cityBtn = document.createElement("button");
-  //   add city & state attributes to button for use when loading results from history
+  //   add city attributes to button for use when loading results from history
   cityBtn.setAttribute("data-city-name", cityName);
-  cityBtn.setAttribute("data-state-code", stateCode);
-  //   set text content to city & state
-  cityBtn.textContent = cityName + ", " + stateCode;
+  //   set text content to city 
+  cityBtn.textContent = cityName;
   //   add relevant classes
   cityBtn.className = "btn btn-block text-white";
   //   append button to list item and list item to history list
@@ -250,26 +245,24 @@ var createHistoryButton = function (cityName, stateCode) {
 // submit button handler load forecast of new search
 var submitBtnHandler = function (event) {
   event.preventDefault();
-  //   split input into city & state code from city input
+  //   get city from city input
   var inputEl = document.getElementById("city");
   var inputString = inputEl.value;
-  var cityName = inputString.split(",")[0].trim();
-  var stateCode = inputString.split(",")[1].trim();
+  var cityName = inputString.trim();
   //   add new search to history list
-  historyArr.push([cityName, stateCode]);
+  historyArr.push(cityName);
   //   save history to history array and update history list buttons
   saveHistory();
   loadHistory();
-  //   call function to get lat lon of city state
-  getLatLon(cityName, stateCode);
+  //   call function to get lat lon of city 
+  getLatLon(cityName);
 };
 
 // history button handler that loads forecast of previous search
 var historyBtnHandler = function (event) {
   event.preventDefault();
   var cityName = event.target.getAttribute("data-city-name");
-  var stateCode = event.target.getAttribute("data-state-code");
-  getLatLon(cityName, stateCode);
+  getLatLon(cityName);
 };
 
 // remove all children from an element
@@ -287,8 +280,8 @@ historyList.addEventListener("click", historyBtnHandler);
 // load history from local storage and initialize page using historical result or default of nyc
 loadHistory();
 if (historyArr.length < 1) {
-  getLatLon("New York", "NY");
+  getLatLon("New York");
 } else {
   var lastEl = historyArr.length - 1;
-  getLatLon(historyArr[lastEl][0], historyArr[lastEl][1]);
+  getLatLon(historyArr[lastEl]);
 }
