@@ -94,9 +94,9 @@ var loadMain = function (cityData, cityName) {
   var uvSpan = document.createElement("span");
   //   add color to UVSpan based on uv index value
   uvSpan.textContent = currentStats.uvi;
-  if (currentStats.uvi <= 0.5) {
+  if (currentStats.uvi <= 5) {
     uvSpan.className = "bg-success rounded px-2";
-  } else if (currentStats.uvi <= 0.75) {
+  } else if (currentStats.uvi <= 7) {
     uvSpan.className = "bg-warning rounded px-2";
   } else {
     uvSpan.className = "bg-danger rounded px-2";
