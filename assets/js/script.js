@@ -19,7 +19,7 @@ var loadHistory = function () {
   else {
     var itemCount = 1;
     for (var i = historyArr.length - 1; i >= 0 && itemCount <= 4; i--) {
-      createHistoryButton(historyArr[i][0], historyArr[i][1]);
+      createHistoryButton(historyArr[i]);
       itemCount++;
     }
   }
@@ -27,7 +27,8 @@ var loadHistory = function () {
 
 // save search history to local storage
 var saveHistory = function () {
-  // save history to local storage location
+  // get unique values
+  // historyArr = uniqueValues(historyArr);
   localStorage.setItem("city-history", JSON.stringify(historyArr));
 };
 
@@ -36,10 +37,11 @@ var clearHistory = function () {
   historyArr = [];
   saveHistory();
 };
+
 // TODO: break into 2 sub-functions for overview & forecast
 // TODO: remove erroneous nesting
 // initialize page using cityData input
-var loadMain = function (cityData, cityName, stateCode) {
+var loadMain = function (cityData, cityName) {
   // clear children overview & forecast elements
   removeAllChildren(overviewEl);
   removeAllChildren(forecasts);
@@ -47,17 +49,14 @@ var loadMain = function (cityData, cityName, stateCode) {
   var currentStats = cityData.current;
   //  create divs to load within overview split by text & image
   var overviewMain = document.createElement("div");
+  overviewMain.className = "pt-2";
   var overviewImg = document.createElement("div");
+  overviewImg.className = "pt-2";
   // create div within overview to hold h2 and add text for location & date
   var overviewHeader = document.createElement("div");
   var cityResultsH2 = document.createElement("h2");
   cityResultsH2.textContent =
-    cityName +
-    ", " +
-    stateCode +
-    "   (" +
-    moment.unix(currentStats.dt).format("M/D/YY") +
-    ")";
+    cityName + "   (" + moment.unix(currentStats.dt).format("M/D/YY") + ")";
   cityResultsH2.className = "text-center";
   //   create image source using open weather by passing icon id from current date
   var cityResultsImg = document.createElement("img");
@@ -121,17 +120,17 @@ var loadMain = function (cityData, cityName, stateCode) {
   // update 5 day forecast
   //   pull forecast data from citydata object
   var forecast = cityData.daily;
-//   create header for 5 day forecast and add relevent classes
+  //   create header for 5 day forecast and add relevent classes
   var forecastH3 = document.createElement("h3");
   forecastH3.textContent = "5 Day Forecast";
   forecastH3.className = "text-center mb-4";
-//   append h3 to forecasts div
+  //   append h3 to forecasts div
   forecasts.append(forecastH3);
-//   create div to hold forecast cards and add relevant attributes & classes
+  //   create div to hold forecast cards and add relevant attributes & classes
   var forecast5EL = document.createElement("div");
   forecast5EL.id = "forecast5";
   forecast5EL.className = "row justify-content-between";
-//   for 5 future days create card and append to forecast card div
+  //   for 5 future days create card and append to forecast card div
   for (var i = 1; i < 6; i++) {
     // get forecast for daily[i]
     daily = forecast[i];
@@ -142,10 +141,10 @@ var loadMain = function (cityData, cityName, stateCode) {
     var date = document.createElement("h3");
     date.className = "p-0 text-center bg-secondary text-white forecast-date";
     date.textContent = moment.unix(daily.dt).format("ddd M/D/YY");
-// create card body to hold weather stats & add relevant classes
+    // create card body to hold weather stats & add relevant classes
     var cardBody = document.createElement("div");
     cardBody.className = "pl-2 bg-dark text-light";
-// create card image and create link for image source 
+    // create card image and create link for image source
     var dailyResultsImg = document.createElement("img");
     var dailyWeatherIcon =
       "https://openweathermap.org/img/wn/" + daily.weather[0].icon + "@2x.png";
@@ -153,32 +152,35 @@ var loadMain = function (cityData, cityName, stateCode) {
     var dailyWeatherAlt = daily.weather[0].description;
     dailyResultsImg.setAttribute("src", dailyWeatherIcon);
     dailyResultsImg.setAttribute("alt", dailyWeatherAlt);
-// create p element to hold rounded temp
+    // create p element to hold rounded temp
     var temp = document.createElement("p");
     temp.textContent = "Temp: " + Math.round(daily.temp.day, 0) + " F";
-// create p element to hold rounded wind
+    // create p element to hold rounded wind
     var wind = document.createElement("p");
     wind.textContent = "Wind: " + Math.round(daily.wind_speed, 0) + " MPH";
-// create p element to hold rounded humidity
+    // create p element to hold rounded humidity
     var humidity = document.createElement("p");
     humidity.textContent = "Humidity: " + daily.humidity + "%";
-// append image & stats to body of card
+    // append image & stats to body of card
     cardBody.append(dailyResultsImg);
     cardBody.append(temp);
     cardBody.append(wind);
     cardBody.append(humidity);
-// append date header and body to card div
+    // append date header and body to card div
     card.append(date);
     card.append(cardBody);
     // append card div to forecasts div
     forecast5EL.append(card);
   }
-//   append 5 day forcast to forecasts div
+  //   append 5 day forcast to forecasts div
   forecasts.append(forecast5EL);
+  //   save history to history array and update history list buttons
+  saveHistory();
+  loadHistory();
 };
 
 // get weather data for a city from API
-var getForecast = function (lat, lon, cityName, stateCode) {
+var getForecast = function (lat, lon, cityName) {
   // create api url from lat lon
   var apiUrl =
     "https://api.openweathermap.org/data/2.5/onecall?lat=" +
@@ -191,7 +193,10 @@ var getForecast = function (lat, lon, cityName, stateCode) {
     if (response.ok) {
       response.json().then(function (data) {
         // call function to load page with forecast data and city text inputs
-        loadMain(data, cityName, stateCode);
+        loadMain(data, cityName);
+        // clear input field
+        var inputEl = document.getElementById("city");
+        inputEl.value = "";
       });
     } else {
       // alert if there is an error
@@ -200,22 +205,31 @@ var getForecast = function (lat, lon, cityName, stateCode) {
   });
 };
 
-// get lat lon from city and state
-var getLatLon = function (cityName, stateCode) {
-  // create api url from city name and state to retrieve lat lon
+// get lat lon from city
+var getLatLon = function (cityName, isSearch) {
+  // create api url from city name to retrieve lat lon
   var apiUrl =
     "https://api.openweathermap.org/geo/1.0/direct?q=" +
     cityName +
-    "," +
-    stateCode +
-    ",US&appid=" +
+    "&appid=" +
     apiKey;
   // fetch api url
   fetch(apiUrl).then(function (response) {
     if (response.ok) {
       response.json().then(function (data) {
-        // upon reponse, get forecast data through passing lat, lon and city text inputs
-        getForecast(data[0].lat, data[0].lon, cityName, stateCode);
+        if (data.length > 0) {
+          if (isSearch) {
+            // //   add new search to history list
+            historyArr.push(cityName);
+          }
+          // upon reponse, get forecast data through passing lat, lon and city text inputs
+          getForecast(data[0].lat, data[0].lon, cityName);
+        } else {
+          window.alert("Please enter a valid city.");
+          // clear input field
+          var inputEl = document.getElementById("city");
+          inputEl.value = "";
+        }
       });
     } else {
       // alert if there is an error
@@ -228,18 +242,17 @@ var getLatLon = function (cityName, stateCode) {
 // TODO: Add clear history button
 
 // create history button for a city
-var createHistoryButton = function (cityName, stateCode) {
+var createHistoryButton = function (cityName) {
   // create city list element ad add relevant classes for formatting
   var cityLi = document.createElement("li");
   cityLi.className =
     "col-5 mx-1 col-lg-10 list-group-item mt-2 mb-2 rounded  p-0 prev-city  bg-info";
   // create button to go inside element
   var cityBtn = document.createElement("button");
-  //   add city & state attributes to button for use when loading results from history
+  //   add city attributes to button for use when loading results from history
   cityBtn.setAttribute("data-city-name", cityName);
-  cityBtn.setAttribute("data-state-code", stateCode);
-  //   set text content to city & state
-  cityBtn.textContent = cityName + ", " + stateCode;
+  //   set text content to city
+  cityBtn.textContent = cityName;
   //   add relevant classes
   cityBtn.className = "btn btn-block text-white";
   //   append button to list item and list item to history list
@@ -250,26 +263,21 @@ var createHistoryButton = function (cityName, stateCode) {
 // submit button handler load forecast of new search
 var submitBtnHandler = function (event) {
   event.preventDefault();
-  //   split input into city & state code from city input
+  //   get city from city input
   var inputEl = document.getElementById("city");
   var inputString = inputEl.value;
-  var cityName = inputString.split(",")[0].trim();
-  var stateCode = inputString.split(",")[1].trim();
-  //   add new search to history list
-  historyArr.push([cityName, stateCode]);
-  //   save history to history array and update history list buttons
-  saveHistory();
-  loadHistory();
-  //   call function to get lat lon of city state
-  getLatLon(cityName, stateCode);
+  var cityName = inputString.trim();
+  // //   add new search to history list
+  // historyArr.push(cityName);
+  //   call function to get lat lon of city
+  getLatLon(cityName, true);
 };
 
 // history button handler that loads forecast of previous search
 var historyBtnHandler = function (event) {
   event.preventDefault();
   var cityName = event.target.getAttribute("data-city-name");
-  var stateCode = event.target.getAttribute("data-state-code");
-  getLatLon(cityName, stateCode);
+  getLatLon(cityName, false);
 };
 
 // remove all children from an element
@@ -277,6 +285,14 @@ var removeAllChildren = function (parentEl) {
   while (parentEl.firstChild) {
     parentEl.removeChild(parentEl.firstChild);
   }
+};
+
+var uniqueValues = function (arr) {
+  var uniqueFilter = (value, index, self) => {
+    return self.indexOf(value) === index;
+  };
+
+  return arr.filter(uniqueFilter);
 };
 
 // event listener for submit search button
@@ -287,8 +303,8 @@ historyList.addEventListener("click", historyBtnHandler);
 // load history from local storage and initialize page using historical result or default of nyc
 loadHistory();
 if (historyArr.length < 1) {
-  getLatLon("New York", "NY");
+  getLatLon("New York", false);
 } else {
   var lastEl = historyArr.length - 1;
-  getLatLon(historyArr[lastEl][0], historyArr[lastEl][1]);
+  getLatLon(historyArr[lastEl], false);
 }
