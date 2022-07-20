@@ -1,4 +1,4 @@
-# daily-scheduler
+# weather-dashboard
 
 ## Purpose
 A weather app to find out the forecast for a given location
